@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { Menu, X } from "lucide-react"; // Import icons
 
 export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const navItems = [
+    { name: "Home", path: "/", icon: "🏠" },
+    { name: "About", path: "/about", icon: "ℹ️" },
+    { name: "Contact", path: "/contact", icon: "📞" },
+    { name: "Github", path: "/github", icon: "💻" }
+  ];
+
   return (
     <header className="shadow sticky z-50 top-0">
       <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
@@ -13,73 +25,78 @@ export default function Header() {
               alt="Logo"
             />
           </Link>
-          <div className="flex items-center lg:order-2">
+
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex lg:items-center lg:space-x-8">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `block py-2 px-4 rounded-md text-gray-700 duration-200 ${
+                    isActive
+                      ? "text-orange-700 font-bold"
+                      : "hover:text-orange-700"
+                  }`
+                }
+              >
+                {item.name}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* Right Side Buttons */}
+          <div className="flex items-center">
             <Link
               to="/login"
-              className="text-gray-800 hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+              className="text-gray-800 hover:bg-gray-50 font-medium rounded-lg text-sm px-4 py-2 mr-2"
             >
               Log in
             </Link>
             <Link
               to="/signup"
-              className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"
+              className="text-white bg-orange-700 hover:bg-orange-800 font-medium rounded-lg text-sm px-4 py-2"
             >
               Get started
             </Link>
           </div>
-          <div
-            className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
-            id="mobile-menu-2"
-          >
-            <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-              <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/about"
-                  className={({ isActive }) =>
-                    `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${
-                      isActive ? "text-orange-700" : "text-gray-700"
-                    } hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                  }
-                >
-                  About
-                </NavLink>
-              </li>
-              <li></li>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                Contact
-              </NavLink>
-              <NavLink
-                to="/github"
-                className={({ isActive }) =>
-                  `block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 ${
-                    isActive ? "text-orange-700" : "text-gray-700"
-                  } hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                }
-              >
-                Github
-              </NavLink>
-            </ul>
+
+          {/* Mobile menu button */}
+          <div className="lg:hidden flex items-center">
+            <button
+              onClick={toggleMenu}
+              className="p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+            >
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="lg:hidden px-4 pb-3 space-y-2">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                className={({ isActive }) =>
+                  `block px-3 py-2 rounded-md text-gray-700 ${
+                    isActive
+                      ? "bg-orange-100 text-orange-700"
+                      : "hover:bg-gray-100"
+                  }`
+                }
+                onClick={() => setIsOpen(false)}
+              >
+                {item.name}
+              </NavLink>
+            ))}
+          </div>
+        )}
       </nav>
     </header>
   );
